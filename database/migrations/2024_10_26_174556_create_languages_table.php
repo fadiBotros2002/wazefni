@@ -15,8 +15,10 @@ return new class extends Migration
             $table->bigIncrements('language_id');
             $table->foreignId('cv_id')->constrained('cvs');
             $table->string('language_name');
+
             $table->enum('proficiency_level', ['Beginner', 'Intermediate', 'Advanced', 'Fluent']);
-            $table->timestamps();
+            $table->timestamps();///////
+
         });
     }
 
