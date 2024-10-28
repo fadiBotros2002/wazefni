@@ -18,6 +18,7 @@ return new class extends Migration
             $table->json('options');
             $table->string('answer');
             $table->timestamps();
+            //////hello world
         });
     }
 
