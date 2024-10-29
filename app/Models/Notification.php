@@ -14,7 +14,6 @@ class Notification extends Model
         'post_id',
         'user_id',
         'message',
-        'read_at',
         'sent_at',
     ];
     public function post()

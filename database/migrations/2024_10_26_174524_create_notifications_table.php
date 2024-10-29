@@ -16,7 +16,6 @@ return new class extends Migration
             $table->unsignedBigInteger('post_id');
             $table->unsignedBigInteger('user_id');
             $table->text('message');
-            $table->timestamp('read_at')->nullable();
             $table->timestamp('sent_at');
             $table->timestamps();
 
