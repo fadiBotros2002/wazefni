@@ -11,13 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('notifications', function (Blueprint $table) {
-            $table->bigIncrements('notification_id');
+        Schema::create('notification_users', function (Blueprint $table) {
+            $table->bigIncrements('notification_user_id');
             $table->foreignId('user_id')->constrained('users');
-            $table->foreignId('post_id')->constrained('posts');
-            $table->text('message');
+            $table->foreignId('notification_id')->constrained('notifications');
          ////   $table->enum('status_message', ['active', 'inactive','pending']);
-            $table->timestamp('sent_at');
             $table->timestamps();
         });
     }
@@ -27,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('notifications');
+        Schema::dropIfExists('notification_users');
     }
 };
