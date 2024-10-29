@@ -13,7 +13,7 @@ return new class extends Migration
 {
     Schema::create('posts', function (Blueprint $table) {
         $table->bigIncrements('post_id');
-        $table->foreignId('user_id')->constrained('users');
+        $table->unsignedBigInteger('user_id');
         $table->string('title');
         $table->string('type');
         $table->text('description');
@@ -23,8 +23,9 @@ return new class extends Migration
         $table->string('salary');
         $table->integer('experience_year');
         $table->timestamp('posted_at');
-
         $table->timestamps();
+
+        $table->foreign('user_id')->references('user_id')->on('users')->onDelete('cascade');
     });
 }
 

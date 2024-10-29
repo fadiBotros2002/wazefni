@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('cvs', function (Blueprint $table) {
             $table->bigIncrements('cv_id');
-            $table->foreignId('user_id')->constrained('users');
+            $table->unsignedBigInteger('user_id');
             $table->string('image')->nullable();
             $table->string('first_name');
             $table->string('last_name');
@@ -25,6 +25,9 @@ return new class extends Migration
             $table->text('address');
             $table->text('portfolio')->nullable();
             $table->timestamps();
+
+            $table->foreign('user_id')->references('user_id')->on('users')->onDelete('cascade');
+
         });
     }
 

@@ -13,12 +13,16 @@ return new class extends Migration
     {
         Schema::create('reports', function (Blueprint $table) {
             $table->bigIncrements('report_id');
-            $table->foreignId('user_id')->constrained('users');
+            $table->unsignedBigInteger('user_id');
             $table->text('message');
             $table->boolean('is_read')->default(false);
-            $table->timestamp('sent_at');
+            $table->timestamp('sent_at')->useCurrent();
             $table->timestamps();
+
+            $table->foreign('user_id')->references('user_id')->on('users')->onDelete('cascade');
         });
+
+
     }
 
     /**

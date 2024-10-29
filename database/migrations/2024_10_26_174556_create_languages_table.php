@@ -13,11 +13,14 @@ return new class extends Migration
     {
         Schema::create('languages', function (Blueprint $table) {
             $table->bigIncrements('language_id');
-            $table->foreignId('cv_id')->constrained('cvs');
+            $table->unsignedBigInteger('cv_id');
             $table->string('language_name');
 
             $table->enum('proficiency_level', ['Beginner', 'Intermediate', 'Advanced', 'Fluent']);
             $table->timestamps();///////
+
+            $table->foreign('cv_id')->references('cv_id')->on('cvs')->onDelete('cascade');
+
 
         });
     }

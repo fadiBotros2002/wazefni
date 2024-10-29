@@ -13,12 +13,16 @@ return new class extends Migration
     {
         Schema::create('applications', function (Blueprint $table) {
             $table->bigIncrements('application_id');
-            $table->foreignId('post_id')->constrained('posts');
-            $table->foreignId('user_id')->constrained('users');
+            $table->unsignedBigInteger('post_id');
+            $table->unsignedBigInteger('user_id');
             $table->string('cv');
             $table->string('test_result');
             $table->timestamp('application_date');
             $table->timestamps();
+
+
+        $table->foreign('post_id')->references('post_id')->on('posts')->onDelete('cascade');
+        $table->foreign('user_id')->references('user_id')->on('users')->onDelete('cascade');
         });
     }
 

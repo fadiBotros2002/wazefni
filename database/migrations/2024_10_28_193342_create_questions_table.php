@@ -13,12 +13,14 @@ return new class extends Migration
     {
         Schema::create('questions', function (Blueprint $table) {
             $table->bigIncrements('question_id');
-            $table->foreignId('test_id')->constrained('tests');
+            $table->unsignedBigInteger('test_id');
             $table->text('question');
             $table->json('options');
             $table->string('answer');
             $table->timestamps();
-            //////hello world
+
+            $table->foreign('test_id')->references('test_id')->on('tests')->onDelete('cascade');
+
         });
     }
 

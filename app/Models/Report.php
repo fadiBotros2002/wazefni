@@ -8,4 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class Report extends Model
 {
     use HasFactory;
+    protected $primaryKey = 'report_id';
+    protected $fillable = ['user_id', 'message', 'is_read', 'sent_at',];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id', 'user_id');
+    }
 }

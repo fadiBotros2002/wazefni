@@ -13,12 +13,16 @@ return new class extends Migration
     {
         Schema::create('notifications', function (Blueprint $table) {
             $table->bigIncrements('notification_id');
-            $table->foreignId('user_id')->constrained('users');
-            $table->foreignId('post_id')->constrained('posts');
+            $table->unsignedBigInteger('post_id');
+            $table->unsignedBigInteger('user_id');
             $table->text('message');
-         ////   $table->enum('status_message', ['active', 'inactive','pending']);
+            $table->timestamp('read_at')->nullable();
             $table->timestamp('sent_at');
             $table->timestamps();
+
+
+        $table->foreign('post_id')->references('post_id')->on('posts')->onDelete('cascade');
+        $table->foreign('user_id')->references('user_id')->on('users')->onDelete('cascade');
         });
     }
 

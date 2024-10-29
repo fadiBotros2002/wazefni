@@ -13,9 +13,12 @@ return new class extends Migration
     {
         Schema::create('tests', function (Blueprint $table) {
             $table->bigIncrements('test_id');
-            $table->foreignId('post_id')->constrained('posts');
+            $table->unsignedBigInteger('post_id');
             $table->string('title');
             $table->timestamps();
+
+            $table->foreign('post_id')->references('post_id')->on('posts')->onDelete('cascade');
+
         });
     }
 
