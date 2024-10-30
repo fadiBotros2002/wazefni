@@ -16,7 +16,7 @@ return new class extends Migration
             $table->unsignedBigInteger('test_id');
             $table->text('question');
             $table->json('options');
-            $table->string('answer');
+            $table->string('answer')->nullable();
             $table->timestamps();
 
             $table->foreign('test_id')->references('test_id')->on('tests')->onDelete('cascade');

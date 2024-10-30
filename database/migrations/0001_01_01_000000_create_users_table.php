@@ -15,9 +15,11 @@ return new class extends Migration
             $table->bigIncrements('user_id');
             $table->string('name');
             $table->string('email')->unique();
+            $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->enum('role', ['admin','user', 'employer']);
-            $table->enum('status', ['active', 'inactive','pending'])->default('active');
+            $table->enum('role', ['admin','user', 'employer'])->default('user');
+            $table->enum('userstatus', ['active', 'inactive','pending'])->default('active');
+            $table->rememberToken();
             $table->timestamps();
         });
 
