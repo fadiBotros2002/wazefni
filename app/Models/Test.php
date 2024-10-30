@@ -11,12 +11,15 @@ class Test extends Model
 
     protected $primaryKey = 'test_id';
     protected $fillable = [
-        'post_id',
+
         'title',
     ];
 
-    public function post()
-    {
-        return $this->belongsTo(Post::class, 'post_id', 'post_id');
+    public function posts() {
+        return $this->hasMany(Post::class, 'test_id', 'test_id');
+    }
+
+    public function questions() {
+        return $this->hasMany(Question::class, 'test_id', 'test_id');
     }
 }

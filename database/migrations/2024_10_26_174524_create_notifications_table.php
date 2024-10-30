@@ -15,6 +15,7 @@ return new class extends Migration
             $table->bigIncrements('notification_id');
             $table->unsignedBigInteger('post_id');
             $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('application_id');
             $table->text('message');
             $table->timestamp('sent_at');
             $table->timestamps();
@@ -22,7 +23,8 @@ return new class extends Migration
 
         $table->foreign('post_id')->references('post_id')->on('posts')->onDelete('cascade');
         $table->foreign('user_id')->references('user_id')->on('users')->onDelete('cascade');
-        });
+        $table->foreign('application_id')->references('application_id')->on('applications')->onDelete('cascade');
+    });
     }
 
     /**

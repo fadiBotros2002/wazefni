@@ -14,7 +14,7 @@ class Employer extends Model
         'company_name',
         'company_description',
     ];
-    public function user()
+    public function users()
     {
         return $this->belongsTo(User::class, 'user_id', 'user_id');
     }

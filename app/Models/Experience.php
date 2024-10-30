@@ -18,7 +18,7 @@ class Experience extends Model
         'start_date',
         'end_date',
     ];
-    public function cv()
+    public function cvs()
     {
         return $this->belongsTo(CV::class, 'cv_id', 'cv_id');
     }

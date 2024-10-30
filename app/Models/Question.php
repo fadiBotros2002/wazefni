@@ -21,7 +21,7 @@ class Question extends Model
         'options' => 'array',
     ];
 
-    public function test()
+    public function tests()
     {
         return $this->belongsTo(Test::class, 'test_id', 'test_id');
     }

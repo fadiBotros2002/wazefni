@@ -23,8 +23,22 @@ class Cv extends Model
         'address',
         'portfolio',
     ];
-    public function user()
+
+    public function users()
     {
         return $this->belongsTo(User::class, 'user_id', 'user_id');
     }
+
+    public function languages()
+    {
+        return $this->hasMany(Language::class, 'cv_id', 'cv_id');
+    }
+
+    public function experiences()
+    {
+        return $this->hasMany(Experience::class, 'cv_id', 'cv_id');
+    }
+
+
+
 }

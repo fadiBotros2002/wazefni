@@ -17,12 +17,19 @@ class Application extends Model
         'test_result',
         'application_date',
     ];
-    public function post()
+
+    public function posts()
     {
         return $this->belongsTo(Post::class, 'post_id', 'post_id');
     }
-    public function user()
+
+    public function users()
     {
         return $this->belongsTo(User::class, 'user_id', 'user_id');
+    }
+
+    public function notifications()
+    {
+        return $this->hasOne(Notification::class, 'application_id', 'application_id');
     }
 }

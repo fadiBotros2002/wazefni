@@ -19,11 +19,29 @@ class Post extends Model
         'time',
         'salary',
         'experience_year',
+        'test_id',
         'posted_at',
     ];
 
-    public function user()
+    public function users()
     {
         return $this->belongsTo(User::class, 'user_id', 'user_id');
     }
+    public function tests() {
+        return $this->belongsTo(Test::class, 'test_id', 'test_id');
+    }
+
+    public function reports() {
+        return $this->hasMany(Report::class, 'report_id', 'report_id');
+    }
+
+
+    public function applications() {
+        return $this->hasMany(Application::class, 'application_id', 'application_id');
+    }
+
+    public function notifications() {
+        return $this->hasMany(Notification::class, 'post_id', 'post_id');
+    }
+
 }

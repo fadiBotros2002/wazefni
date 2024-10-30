@@ -56,4 +56,29 @@ class User extends Authenticatable
     {
         return $this->hasMany(Report::class, 'user_id', 'user_id');
     }
+
+    public function cvs()
+    {
+        return $this->hasOne(CV::class, 'user_id', 'user_id');
+    }
+
+    public function employers()
+    {
+        return $this->hasOne(Employer::class, 'user_id', 'user_id');
+    }
+
+    public function notifications()
+    {
+        return $this->hasMany(Notification::class, 'user_id', 'user_id');
+    }
+
+    public function posts() {
+        return $this->hasMany(Post::class, 'user_id', 'user_id');
+    }
+
+    public function applications() {
+        return $this->hasMany(Application::class, 'user_id', 'user_id');
+    }
+
+
 }

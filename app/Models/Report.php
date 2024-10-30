@@ -11,8 +11,15 @@ class Report extends Model
     protected $primaryKey = 'report_id';
     protected $fillable = ['user_id', 'message', 'is_read', 'sent_at',];
 
-    public function user()
+
+
+    public function users()
     {
         return $this->belongsTo(User::class, 'user_id', 'user_id');
+    }
+
+    public function posts()
+    {
+        return $this->belongsTo(Post::class, 'post_id', 'post_id');
     }
 }

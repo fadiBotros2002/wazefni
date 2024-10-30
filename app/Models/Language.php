@@ -16,7 +16,7 @@ class Language extends Model
         'language_name',
         'proficiency_level',
     ];
-    public function cv()
+    public function cvs()
     {
         return $this->belongsTo(CV::class, 'cv_id', 'cv_id');
     }
