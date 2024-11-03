@@ -2,21 +2,18 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\ResetPasswordCodeMail;
 
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail
 {
     use HasFactory, Notifiable, HasApiTokens;
-
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
 
     protected $primaryKey = 'user_id';
 
@@ -24,9 +21,29 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'verification_code',
         'role',
         'userstatus',
+        'email_verified_at'
     ];
+
+    public function sendPasswordResetNotification($token)
+    {
+        $verificationCode = substr($token, 0, 6); // استخدام الجزء الأول من التوكن كرمز تحقق
+        $this->reset_code = $verificationCode;
+        $this->save();
+
+        Mail::to($this->email)->send(new ResetPasswordCodeMail($verificationCode));
+    }
+
+    public function markEmailAsVerified()
+    {
+        Log::info('Marking email as verified for user: ' . $this->email);
+        $this->email_verified_at = now();
+        $this->save();
+        Log::info('Email verification timestamp updated for user: ' . $this->email . ' with timestamp: ' . $this->email_verified_at);
+    }
+
 
     /**
      * The attributes that should be hidden for serialization.
@@ -72,13 +89,13 @@ class User extends Authenticatable
         return $this->hasMany(Notification::class, 'user_id', 'user_id');
     }
 
-    public function posts() {
+    public function posts()
+    {
         return $this->hasMany(Post::class, 'user_id', 'user_id');
     }
 
-    public function applications() {
+    public function applications()
+    {
         return $this->hasMany(Application::class, 'user_id', 'user_id');
     }
-
-
 }

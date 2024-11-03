@@ -19,9 +19,11 @@ return new class extends Migration
             $table->string('password');
             $table->enum('role', ['admin','user', 'employer'])->default('user');
             $table->enum('userstatus', ['active', 'inactive','pending'])->default('active');
+            $table->string('verification_code')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });
+
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {
             $table->string('email')->primary();

@@ -49,7 +49,7 @@ class UsersTableSeeder extends Seeder
 
             [
                 'name' => 'jhon',
-                'email' => 'jhon@example.com',
+                'email' => 'fadibotros99@gmail.com',
                 'password' => Hash::make('123123123'),
                 'role' => 'user',
                 'userstatus' => 'active',
