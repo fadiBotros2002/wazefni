@@ -19,7 +19,8 @@ return new class extends Migration
             $table->string('password');
             $table->enum('role', ['admin','user', 'employer'])->default('user');
             $table->enum('userstatus', ['active', 'inactive','pending'])->default('active');
-            $table->string('verification_code')->nullable();
+            $table->string('verification_code')->nullable();//when forgot password and reset
+            $table->string('email_temp')->nullable(); //when update email this attribute store temporarly the eamil before verification
             $table->rememberToken();
             $table->timestamps();
         });

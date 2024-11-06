@@ -6,6 +6,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\auth\AuthController;
 use Illuminate\Session\Middleware\StartSession;
 use App\Http\Controllers\Auth\PasswordResetController;
+use App\Http\Controllers\Auth\ProfileController;
+use Illuminate\Support\Facades\Auth;
 
 // Apply session middleware to routes that need it
 Route::middleware([StartSession::class])->group(function () {
@@ -16,8 +18,33 @@ Route::middleware([StartSession::class])->group(function () {
 // Routes for authentication
 Route::post('/login', [AuthController::class, 'login']);
 
+
+// Routes for authenticated users
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/user', function (Request $request) {
+        return $request->user();
+    });
+
+    Route::post('/update-user-info', [ProfileController::class, 'updateUserInfo']);
+    Route::post('/verify-email', [ProfileController::class, 'verifyEmail']);
+
+
+    Route::get('/logout', [AuthController::class, 'logout']);
+});
+
+
+
+
+Route::post('/forgot-password', [PasswordResetController::class, 'sendResetLinkEmail']);
+Route::post('/reset-password', [PasswordResetController::class, 'reset'])->name('password.reset');
+
+
+
+
+
 // Email verification routes
-Route::middleware(['auth:sanctum', 'signed'])->group(function () {
+///Route::middleware(['auth:sanctum', 'signed'])->group(function () {
+/*
     Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
         $request->fulfill();
 
@@ -30,13 +57,9 @@ Route::middleware(['auth:sanctum', 'signed'])->group(function () {
         return response()->json(['message' => 'Verification link sent'], 200);
     })->name('verification.send');
 
-    Route::get('/user', function (Request $request) {
-        return $request->user();
-    });
 
-    Route::get('/logout', [AuthController::class, 'logout']);
-});
+   */
 
-Route::post('/forgot-password', [PasswordResetController::class, 'sendResetLinkEmail']);
-Route::post('/reset-password', [PasswordResetController::class, 'reset'])->name('password.reset');
 
+
+///////});

@@ -27,23 +27,6 @@ class User extends Authenticatable implements MustVerifyEmail
         'email_verified_at'
     ];
 
-    public function sendPasswordResetNotification($token)
-    {
-        $verificationCode = substr($token, 0, 6); // استخدام الجزء الأول من التوكن كرمز تحقق
-        $this->reset_code = $verificationCode;
-        $this->save();
-
-        Mail::to($this->email)->send(new ResetPasswordCodeMail($verificationCode));
-    }
-
-    public function markEmailAsVerified()
-    {
-        Log::info('Marking email as verified for user: ' . $this->email);
-        $this->email_verified_at = now();
-        $this->save();
-        Log::info('Email verification timestamp updated for user: ' . $this->email . ' with timestamp: ' . $this->email_verified_at);
-    }
-
 
     /**
      * The attributes that should be hidden for serialization.
