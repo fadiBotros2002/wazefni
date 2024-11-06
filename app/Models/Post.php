@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -8,7 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 class Post extends Model
 {
     use HasFactory;
+
     protected $primaryKey = 'post_id';
+
     protected $fillable = [
         'user_id',
         'title',
@@ -23,25 +24,28 @@ class Post extends Model
         'posted_at',
     ];
 
-    public function users()
+    public function user()
     {
         return $this->belongsTo(User::class, 'user_id', 'user_id');
     }
-    public function tests() {
+
+    public function test()
+    {
         return $this->belongsTo(Test::class, 'test_id', 'test_id');
     }
 
-    public function reports() {
-        return $this->hasMany(Report::class, 'report_id', 'report_id');
+    public function reports()
+    {
+        return $this->hasMany(Report::class, 'post_id', 'post_id');
     }
 
-
-    public function applications() {
-        return $this->hasMany(Application::class, 'application_id', 'application_id');
+    public function applications()
+    {
+        return $this->hasMany(Application::class, 'post_id', 'post_id');
     }
 
-    public function notifications() {
+    public function notifications()
+    {
         return $this->hasMany(Notification::class, 'post_id', 'post_id');
     }
-
 }

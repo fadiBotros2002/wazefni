@@ -8,6 +8,8 @@ use Illuminate\Session\Middleware\StartSession;
 use App\Http\Controllers\Auth\PasswordResetController;
 use App\Http\Controllers\Auth\ProfileController;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\PostController;
+
 
 // Apply session middleware to routes that need it
 Route::middleware([StartSession::class])->group(function () {
@@ -30,9 +32,20 @@ Route::middleware('auth:sanctum')->group(function () {
 
 
     Route::get('/logout', [AuthController::class, 'logout']);
+
+
+
+
+Route::get('posts', [PostController::class, 'index']);
+Route::post('posts/store', [PostController::class, 'store']);
+Route::get('posts/show/{id}', [PostController::class, 'show']);
+Route::put('posts/update/{id}', [PostController::class, 'update']);
+Route::delete('posts/delete/{id}', [PostController::class, 'destroy']);
+
+
+
+
 });
-
-
 
 
 Route::post('/forgot-password', [PasswordResetController::class, 'sendResetLinkEmail']);
@@ -41,6 +54,12 @@ Route::post('/reset-password', [PasswordResetController::class, 'reset'])->name(
 
 
 
+//posts:
+
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // Email verification routes
 ///Route::middleware(['auth:sanctum', 'signed'])->group(function () {
