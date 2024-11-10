@@ -58,7 +58,7 @@ class AuthController extends Controller
         Log::info('Attempting to register a user.', ['request' => $request->all()]);
 
         $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
+            'name' => 'required|string|max:255|unique:users',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8',
             'role' => 'in:admin,user,employer',
@@ -123,15 +123,13 @@ class AuthController extends Controller
         }
     }
 
-
-
     public function login(Request $request)
     {
         try {
             Log::info('Attempting to log in a user.', ['request' => $request->all()]);
 
             $validateUser = Validator::make($request->all(), [
-                'email' => 'required|email',
+                'email_or_username' => 'required',
                 'password' => 'required',
             ]);
 
@@ -145,15 +143,23 @@ class AuthController extends Controller
                 ], 401);
             }
 
-            if (!Auth::attempt($request->only(['email', 'password']))) {
-                Log::warning('Authentication failed. Email and password do not match.', ['email' => $request->email]);
+            //verify if username or email that entered
+            $login_type = filter_var($request->email_or_username, FILTER_VALIDATE_EMAIL) ? 'email' : 'name';
+
+            $credentials = [
+                $login_type => $request->email_or_username,
+                'password' => $request->password
+            ];
+
+            if (!Auth::attempt($credentials)) {
+                Log::warning('Authentication failed. Email/Username and password do not match.', ['email_or_username' => $request->email_or_username]);
                 return response()->json([
                     'status' => false,
-                    'message' => 'email and password do not match our records'
+                    'message' => 'Email/Username and password do not match our records'
                 ], 401);
             }
 
-            $user = User::where('email', $request->email)->first();
+            $user = User::where($login_type, $request->email_or_username)->first();
             Log::info('User logged in successfully.', ['user' => $user]);
             return response()->json([
                 'status' => true,
@@ -184,7 +190,7 @@ class AuthController extends Controller
                 return response()->json(['status' => false, 'message' => 'No authenticated user found'], 401);
             }
 
-
+    
             $user->tokens()->delete();
             Log::info('User logged out successfully.', ['user' => $user]);
             return response()->json(
