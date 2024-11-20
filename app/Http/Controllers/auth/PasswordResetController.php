@@ -17,9 +17,7 @@ class PasswordResetController extends Controller
     public function sendResetLinkEmail(Request $request)
     {
         // Validate the email input
-        $request->validate(
-            ['email' => 'required|email']
-        );
+        $request->validate(['email' => 'required|email']);
 
         Log::info('Requesting password reset link for email: ' . $request->email);
 
@@ -37,53 +35,68 @@ class PasswordResetController extends Controller
         $user->verification_code = $verificationCode;
         $user->save();
 
+        // Store email and verification code in session
+        $request->session()->put('email', $request->email);
+        $request->session()->put('verification_code', $verificationCode);
+        Log::info('Stored email and verification code in session.', ['email' => $request->email, 'verification_code' => $verificationCode]);
+
         // Send the email with the verification code
         Mail::to($user->email)->send(new \App\Mail\ResetPasswordCodeMail($verificationCode));
         Log::info('Verification code sent successfully to email: ' . $user->email);
+
         return response()->json(['message' => 'Verification code sent successfully.']);
     }
+
 
     /**
      * Reset the password using the verification code
      */
-    public function reset(Request $request)
-    {
-        try {
-            // Validate the input data, including password confirmation
-            $request->validate([
-                'email' => 'required|email',
-                'verification_code' => 'required',
-                'password' => 'required|min:8|confirmed',
-            ]);
-        } catch (ValidationException $e) {
-            // Log validation errors
-            Log::warning('Validation failed for password reset: ' . json_encode($e->errors()));
-            return response()->json([
-                'message' => 'The given data was invalid.',
-                'errors' => $e->errors(),
-            ], 422);
-        }
 
-        Log::info('Attempting to reset password for email: ' . $request->email);
-
-        // Verify the provided verification code
-        $user = \App\Models\User::where('email', $request->email)
-                                ->where('verification_code', $request->verification_code)
-                                ->first();
-
-        if (!$user) {
-            Log::warning('Verification code does not match for email: ' . $request->email);
-            return response()->json(['message' => 'Invalid verification code'], 400);
-        }
-
-        // Update the user's password and clear the verification code
-        $user->forceFill([
-            'password' => bcrypt($request->password),
-            'verification_code' => null // Clear the verification code after successful reset
-        ])->save();
-
-        Log::info('Password reset successfully for user: ' . $user->email);
-
-        return response()->json(['message' => 'Password reset successfully.']);
+     public function reset(Request $request)
+{
+    try {
+        // Validate the input data, including password confirmation
+        $request->validate([
+            'verification_code' => 'required',
+            'password' => 'required|min:8|confirmed',
+        ]);
+    } catch (ValidationException $e) {
+        // Log validation errors
+        Log::warning('Validation failed for password reset: ' . json_encode($e->errors()));
+        return response()->json([
+            'message' => 'The given data was invalid.',
+            'errors' => $e->errors(),
+        ], 422);
     }
+
+    // Retrieve email from session
+    $email = $request->session()->get('email');
+    if (!$email) {
+        Log::warning('Email not found in session.');
+        return response()->json(['message' => 'Email not found in session.'], 400);
+    }
+
+    Log::info('Attempting to reset password for email: ' . $email);
+
+    // Verify the provided verification code
+    $user = \App\Models\User::where('email', $email)
+                            ->where('verification_code', $request->verification_code)
+                            ->first();
+
+    if (!$user) {
+        Log::warning('Verification code does not match for email: ' . $email);
+        return response()->json(['message' => 'Invalid verification code'], 400);
+    }
+
+    // Update the user's password and clear the verification code
+    $user->forceFill([
+        'password' => bcrypt($request->password),
+        'verification_code' => null // Clear the verification code after successful reset
+    ])->save();
+
+    Log::info('Password reset successfully for user: ' . $user->email);
+
+    return response()->json(['message' => 'Password reset successfully.']);
+}
+
 }

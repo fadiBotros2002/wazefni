@@ -21,8 +21,13 @@ Route::middleware([StartSession::class])->group(function () {
 
 // Routes for authentication
 Route::post('/login', [AuthController::class, 'login']);
+
+// Apply session middleware to routes that need it
+Route::middleware([StartSession::class])->group(function (){
 Route::post('/forgot-password', [PasswordResetController::class, 'sendResetLinkEmail']);
 Route::post('/reset-password', [PasswordResetController::class, 'reset'])->name('password.reset');
+});
+
 
 // Routes for admin users
 Route::middleware(['auth:sanctum', AdminMiddleware::class])->group(function () {
