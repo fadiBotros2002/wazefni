@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Models;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -7,16 +6,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Mail;
-use App\Mail\ResetPasswordCodeMail;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
     use HasFactory, Notifiable, HasApiTokens;
 
     protected $primaryKey = 'user_id';
-
     protected $fillable = [
         'name',
         'email',
@@ -27,22 +22,11 @@ class User extends Authenticatable implements MustVerifyEmail
         'email_verified_at'
     ];
 
-
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array<int, string>
-     */
     protected $hidden = [
         'password',
         'remember_token',
     ];
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
     protected function casts(): array
     {
         return [
@@ -51,15 +35,14 @@ class User extends Authenticatable implements MustVerifyEmail
         ];
     }
 
+    public function cv()
+    {
+        return $this->hasOne(Cv::class, 'user_id', 'user_id');
+    }
 
     public function reports()
     {
         return $this->hasMany(Report::class, 'user_id', 'user_id');
-    }
-
-    public function cvs()
-    {
-        return $this->hasOne(CV::class, 'user_id', 'user_id');
     }
 
     public function employers()

@@ -8,16 +8,14 @@ use Illuminate\Support\Facades\Auth;
 
 class PostController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        try {
-            $posts = Post::all();
-            return response()->json($posts);
-        } catch (\Exception $e) {
-            Log::error('Error fetching posts: ' . $e->getMessage());
-            return response()->json(['error' => 'An error occurred while fetching posts'], 500);
-        }
+        $filters = $request->only(['search', 'location', 'type', 'experience_year', 'salary_min', 'salary_max']);
+        $posts = Post::filter($filters)->get();
+        return response()->json($posts);
     }
+
+
 
         public function store(Request $request)
         {
@@ -36,7 +34,7 @@ class PostController extends Controller
                     'experience_year' => 'required|integer',
                 ]);
 
-                // استخدام حارس SANCTUM
+
                 $user = auth('sanctum')->user();
                 Log::info('Checking authenticated user with auth()->check():', ['check' => auth('sanctum')->check()]);
                 Log::info('Authenticated User:', ['user_id' => optional($user)->id]); // استخدام optional لتجنب الأخطاء عند null
@@ -48,7 +46,7 @@ class PostController extends Controller
 
                 Log::info('User object:', ['user' => $user]);
 
-                // التحقق من بيانات المستخدم بشكل فردي لضمان استرجاعها بشكل صحيح
+
                 $userID = $user->getAuthIdentifier();
                 Log::info('User ID:', ['id' => $userID]);
                 Log::info('User Email:', ['email' => $user->email]);

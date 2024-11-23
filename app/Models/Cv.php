@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -12,19 +11,20 @@ class Cv extends Model
     protected $primaryKey = 'cv_id';
     protected $fillable = [
         'user_id',
-        'image',
         'first_name',
         'last_name',
         'email',
         'phone_number',
         'domain',
         'education',
+        'skills',
         'city',
         'address',
         'portfolio',
     ];
 
-    public function users()
+    // Define the relationship with User model correctly
+    public function user()
     {
         return $this->belongsTo(User::class, 'user_id', 'user_id');
     }
@@ -38,7 +38,4 @@ class Cv extends Model
     {
         return $this->hasMany(Experience::class, 'cv_id', 'cv_id');
     }
-
-
-
 }

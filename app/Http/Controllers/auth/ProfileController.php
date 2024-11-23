@@ -29,7 +29,7 @@ class ProfileController extends Controller
             Mail::to($input['email'])->send(new VerificationCodeMail($verificationCode));
         }
 
-        // تحقق من كلمة المرور الحالية وتغيير كلمة المرور الجديدة
+     
         if (isset($input['new_password'])) {
             $request->validate([
                 'current_password' => 'required',
