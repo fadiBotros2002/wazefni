@@ -9,7 +9,14 @@ class Report extends Model
 {
     use HasFactory;
     protected $primaryKey = 'report_id';
-    protected $fillable = ['user_id', 'message', 'is_read', 'sent_at',];
+    protected $fillable = [
+        'user_id',
+        'post_id',
+        'message',
+        'is_read',
+        'status',
+        'sent_at',
+    ];
 
 
 

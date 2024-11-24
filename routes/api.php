@@ -15,6 +15,8 @@ use App\Http\Middleware\AdminOrEmployerMiddleware;
 use App\Http\Middleware\AllAccess;
 use App\Http\Controllers\CvController;
 use App\Http\Controllers\LanguageController;
+use App\Http\Controllers\ExperienceController;
+use App\Http\Controllers\ReportController;
 
 
 ///////////////////////////////////////////////////////////
@@ -49,6 +51,10 @@ Route::middleware(['auth:sanctum', AllAccess::class])->group(function () {
         Route::get('/admin', function (Request $request) {
             return $request->user();
         });
+        //Report
+        Route::get('/reports', [ReportController::class, 'index']);
+        Route::put('/reports/update/{id}', [ReportController::class, 'update']);
+
     });
 
     ///////////////////////////////////////////////////////////
@@ -75,9 +81,22 @@ Route::middleware(['auth:sanctum', AllAccess::class])->group(function () {
         Route::put('/cvs/update/{id?}', [CvController::class, 'update']);
         Route::delete('/cvs/{id}', [CvController::class, 'destroy']);
         //Languages
+        Route::get('/languages/show', [LanguageController::class, 'index']);
         Route::post('/languages/store', [LanguageController::class, 'store']);
         Route::put('/languages/update/{id}', [LanguageController::class, 'update']);
         Route::delete('/languages/delete/{id}', [LanguageController::class, 'destroy']);
+
+        //experience
+        Route::get('/experiences/show/{id?}', [ExperienceController::class, 'index']);
+        Route::post('/experiences/store', [ExperienceController::class, 'store']);
+        Route::put('/experiences/update/{id}', [ExperienceController::class, 'update']);
+        Route::delete('/experiences/delete/{id}', [ExperienceController::class, 'destroy']);
+
+        //report
+        Route::post('/reports/store', [ReportController::class, 'store']);
+        Route::get('/reports/user/show', [ReportController::class, 'userReports']);
+
+
     });
 
 

@@ -17,7 +17,7 @@ return new class extends Migration
             $table->unsignedBigInteger('post_id')->nullable();;
             $table->text('message');
             $table->boolean('is_read')->default(false);
-            $table->timestamp('sent_at')->useCurrent();
+            $table->enum('status', ['pending', 'resolved', 'dismissed'])->default('pending');
             $table->timestamps();
 
             $table->foreign('user_id')->references('user_id')->on('users')->onDelete('cascade');

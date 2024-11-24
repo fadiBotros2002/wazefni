@@ -9,6 +9,18 @@ use Illuminate\Support\Facades\Auth;
 
 class LanguageController extends Controller
 {
+
+    public function index()
+    {
+        $user = Auth::user();
+        $cv = Cv::where('user_id', $user->user_id)->first();
+        if (!$cv) {
+            return response()->json(['error' => 'CV not found'], 404);
+        }
+        $languages = Language::where('cv_id', $cv->cv_id)->get();
+        return response()->json($languages, 200);
+    }
+
     public function store(Request $request)
     {
 
