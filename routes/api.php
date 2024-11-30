@@ -14,6 +14,7 @@ use App\Http\Middleware\AdminMiddleware;
 use App\Http\Middleware\AdminOrEmployerMiddleware;
 use App\Http\Middleware\AllAccess;
 use App\Http\Controllers\CvController;
+use App\Http\Controllers\EmployerController;
 use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\ExperienceController;
 use App\Http\Controllers\ReportController;
@@ -55,6 +56,8 @@ Route::middleware(['auth:sanctum', AllAccess::class])->group(function () {
         Route::get('/reports', [ReportController::class, 'index']);
         Route::put('/reports/update/{id}', [ReportController::class, 'update']);
 
+        Route::get('/employer-requests', [EmployerController::class, 'index']);
+        Route::post('/handle-employer/{user_id}', [EmployerController::class, 'handleRequest']);
     });
 
     ///////////////////////////////////////////////////////////
@@ -95,8 +98,8 @@ Route::middleware(['auth:sanctum', AllAccess::class])->group(function () {
         //report
         Route::post('/reports/store', [ReportController::class, 'store']);
         Route::get('/reports/user/show', [ReportController::class, 'userReports']);
-
-
+        //upgrade role from user to employer
+        Route::post('/apply-employer', [EmployerController::class, 'apply'])->name('apply.employer');
     });
 
 
@@ -125,7 +128,6 @@ Route::middleware(['auth:sanctum', AllAccess::class])->group(function () {
     ///////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////
     //////////////////////////////////////////////////////////
-
 
 
 

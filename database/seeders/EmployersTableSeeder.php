@@ -21,8 +21,10 @@ class EmployersTableSeeder extends Seeder
 
                     'company_name' => 'Tech Innovators',
                     'company_description' => 'Leading the way in tech innovation and development.',
+                    'verification_documents' =>null,
                     'created_at' => now(),
                     'updated_at' => now(),
+
                 ],
 
             ]
