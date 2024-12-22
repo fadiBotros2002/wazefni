@@ -42,7 +42,12 @@ Route::middleware([StartSession::class])->group(function () {
 
 
 Route::middleware(['auth:sanctum', AllAccess::class])->group(function () {
+
+    //show all job posts
     Route::get('/posts', [PostController::class, 'index']);
+     //User Profile
+     Route::post('/update-user-info', [ProfileController::class, 'updateUserInfo']);
+    // Route::post('/verify-email', [ProfileController::class, 'verifyEmail']);//to verify the email if user need update
 
     ///////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////
@@ -72,9 +77,7 @@ Route::middleware(['auth:sanctum', AllAccess::class])->group(function () {
         Route::get('/user', function (Request $request) {
             return $request->user();
         });
-        //User Profile
-        Route::post('/update-user-info', [ProfileController::class, 'updateUserInfo']);
-        Route::post('/verify-email', [ProfileController::class, 'verifyEmail']);
+
         //Logout
         Route::get('/logout', [AuthController::class, 'logout']);
         //CV's

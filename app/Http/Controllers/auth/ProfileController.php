@@ -23,13 +23,16 @@ class ProfileController extends Controller
 
         if (isset($input['email'])) {
             $request->validate(['email' => 'required|email|unique:users,email']);
+            $user->email = $input['email'];
+           /*   //this code if i need to verify  email if i need edit profile email of user//
             $verificationCode = rand(100000, 999999);
             $user->email_temp = $input['email'];
             $user->verification_code = $verificationCode;
             Mail::to($input['email'])->send(new VerificationCodeMail($verificationCode));
+           */
         }
 
-     
+
         if (isset($input['new_password'])) {
             $request->validate([
                 'current_password' => 'required',
