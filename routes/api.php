@@ -46,8 +46,12 @@ Route::middleware(['auth:sanctum', AllAccess::class])->group(function () {
     //show all job posts
     Route::get('/posts', [PostController::class, 'index']);
      //User Profile
-     Route::post('/update-user-info', [ProfileController::class, 'updateUserInfo']);
-    // Route::post('/verify-email', [ProfileController::class, 'verifyEmail']);//to verify the email if user need update
+    Route::post('/update-user-info', [ProfileController::class, 'updateUserInfo']);
+    Route::get('/employer/posts/show/{id}', [PostController::class, 'show']);
+
+
+
+
 
     ///////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////
@@ -114,8 +118,6 @@ Route::middleware(['auth:sanctum', AllAccess::class])->group(function () {
         Route::get('/employer', function (Request $request) {
             return $request->user();
         });
-
-        Route::get('/employer/posts/show/{id}', [PostController::class, 'show']);
         Route::put('/employer/posts/update/{id}', [PostController::class, 'update']);
         Route::delete('/employer/posts/delete/{id}', [PostController::class, 'destroy']);
     });

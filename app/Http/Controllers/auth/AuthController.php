@@ -62,6 +62,7 @@ class AuthController extends Controller
         'name' => 'required|string|max:255|unique:users',
         'password' => 'required|string|min:8',
         'role' => 'in:admin,user,employer',
+        'phone' => 'nullable|string|max:15',
         'userstatus' => 'in:active,inactive,pending',
         'verification_code' => 'required|integer'
     ]);
@@ -101,6 +102,7 @@ class AuthController extends Controller
             'email' => $email, // use the email from session to prevent use it again in verify and registerr
             'password' => Hash::make($request->password),
             'role' => $request->role ?? 'user',
+            'phone' => $request->phone,
             'userstatus' => $request->userstatus ?? 'active',
             'email_verified_at' => now(),
         ]);
