@@ -18,7 +18,9 @@ use App\Http\Controllers\EmployerController;
 use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\ExperienceController;
 use App\Http\Controllers\ReportController;
-
+use App\Http\Controllers\AnswerController;
+use App\Http\Controllers\TestController;
+use App\Http\Controllers\QuestionController;
 
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
@@ -107,6 +109,12 @@ Route::middleware(['auth:sanctum', AllAccess::class])->group(function () {
         Route::get('/reports/user/show', [ReportController::class, 'userReports']);
         //upgrade role from user to employer
         Route::post('/apply-employer', [EmployerController::class, 'apply'])->name('apply.employer');
+
+        //answers
+        Route::post('/answers/store', [AnswerController::class, 'store']);
+
+        //tests
+
     });
 
 

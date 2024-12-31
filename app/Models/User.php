@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Models;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -65,4 +66,13 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasMany(Application::class, 'user_id', 'user_id');
     }
+
+    public function tests()
+    {
+        return $this->hasMany(Test::class, 'user_id', 'user_id');
+    }
+    public function answers()
+{
+    return $this->hasMany(Answer::class, 'user_id', 'user_id');
+}
 }

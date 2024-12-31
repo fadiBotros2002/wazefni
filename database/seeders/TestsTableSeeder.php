@@ -15,18 +15,11 @@ class TestsTableSeeder extends Seeder
     {
         DB::table('tests')->insert(
             [
+
                 [
-                    'title' => 'Test Title 1',
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ],
-                [
-                    'title' => 'Test Title 2',
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ],
-                [
-                    'title' => 'Test Title 3',
+                    'user_id' => 2,
+                    'result' => 70.0,
+                    'status' => 'completed',
                     'created_at' => now(),
                     'updated_at' => now(),
                 ],

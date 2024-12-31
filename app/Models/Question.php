@@ -12,17 +12,12 @@ class Question extends Model
     protected $primaryKey = 'question_id';
 
     protected $fillable = [
-        'test_id',
-        'question',
-        'options',
-        'answer',
-    ];
-    protected $casts = [
-        'options' => 'array',
+        'question_text'
     ];
 
-    public function tests()
+
+    public function answers()
     {
-        return $this->belongsTo(Test::class, 'test_id', 'test_id');
+        return $this->hasOne(Answer::class, 'question_id', 'question_id');
     }
 }

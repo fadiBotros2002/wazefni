@@ -25,7 +25,7 @@ class PostsTableSeeder extends Seeder
                 'time' => '9 AM to 5 PM',
                 'salary' => '60000',
                 'experience_year' => 3,
-                'test_id' => 1,
+
                 'posted_at' => now(),
                 'created_at' => now(),
                 'updated_at' => now(),
@@ -40,7 +40,7 @@ class PostsTableSeeder extends Seeder
                 'time' => 'Flexible',
                 'salary' => '80000',
                 'experience_year' => 5,
-                'test_id' => 2,
+
                 'posted_at' => now(),
                 'created_at' => now(),
                 'updated_at' => now(),

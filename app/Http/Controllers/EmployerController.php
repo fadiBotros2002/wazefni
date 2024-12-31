@@ -55,7 +55,7 @@ class EmployerController extends Controller
         $employer->company_description = $request->company_description;
         //add verifiacation docs into db
         if ($request->hasFile('verification_documents')) {
-            $filePath = $request->file('verification_documents')->store('verification_documents');
+            $filePath = $request->file('verification_documents')->store('verification_documents');//path of stoage docs
             $employer->verification_documents = $filePath;
             Log::info('Verification document uploaded.', ['file_path' => $filePath]);
         }

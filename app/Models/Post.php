@@ -21,7 +21,7 @@ class Post extends Model
         'time',
         'salary',
         'experience_year',
-        'test_id',
+     
         'posted_at',
     ];
 
@@ -30,10 +30,7 @@ class Post extends Model
         return $this->belongsTo(User::class, 'user_id', 'user_id');
     }
 
-    public function test()
-    {
-        return $this->belongsTo(Test::class, 'test_id', 'test_id');
-    }
+
 
     public function reports()
     {

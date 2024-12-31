@@ -22,12 +22,10 @@ return new class extends Migration
         $table->string('time');
         $table->string('salary');
         $table->integer('experience_year');
-        $table->unsignedBigInteger('test_id')->nullable();
         $table->timestamp('posted_at');
         $table->timestamps();
 
         $table->foreign('user_id')->references('user_id')->on('users')->onDelete('cascade');
-        $table->foreign('test_id')->references('test_id')->on('tests')->onDelete('cascade');
     });
 }
 

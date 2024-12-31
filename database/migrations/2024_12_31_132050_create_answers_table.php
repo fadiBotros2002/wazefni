@@ -11,14 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('tests', function (Blueprint $table) {
-            $table->bigIncrements('test_id');
+        Schema::create('answers', function (Blueprint $table) {
+            $table->bigIncrements('answers_id');
             $table->unsignedBigInteger('user_id');
-            $table->float('result')->nullable();
-            $table->enum('status', ['incomplete', 'completed', 'failed'])->default('incomplete');
+            $table->unsignedBigInteger('test_id');
+            $table->unsignedBigInteger('question_id');
+            $table->string('audio_path');
             $table->timestamps();
-
             $table->foreign('user_id')->references('user_id')->on('users')->onDelete('cascade');
+            $table->foreign('test_id')->references('test_id')->on('tests')->onDelete('cascade');
+            $table->foreign('question_id')->references('question_id')->on('questions')->onDelete('cascade');
         });
     }
 
@@ -27,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('tests');
+        Schema::dropIfExists('answers');
     }
 };

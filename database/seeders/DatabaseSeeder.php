@@ -39,7 +39,7 @@ class DatabaseSeeder extends Seeder
                 ExperiencesTableSeeder::class,
                 QuestionsTableSeeder::class,
                 EmployersTableSeeder::class,
-
+                AnswersTableSeeder::class,
 
             ]
         );
