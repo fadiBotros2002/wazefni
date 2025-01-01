@@ -3,47 +3,104 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Question;
+use App\Models\Answer;
 use App\Models\Test;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class TestController extends Controller
 {
-    public function index()
+    public function getAllQuestions()
     {
-        $tests = Test::all();
-        return response()->json($tests);
+        $questions = Question::all();
+        return response()->json($questions);
     }
 
-    public function show($id)
+    public function getQuestionsById($id)
     {
-        $test = Test::findOrFail($id);
-        return response()->json($test);
+        $question = Question::findOrFail($id);
+        return response()->json($question);
     }
 
-    public function store(Request $request)
-    {
-        $request->validate([
-            'user_id' => 'required|exists:users,user_id',
-            'result' => 'nullable|numeric',
-            'status' => 'required|in:incomplete,completed,failed',
-        ]);
 
-        $test = Test::create($request->all());
-        return response()->json($test, 201);
+
+
+
+
+    public function storeAnswers(Request $request)
+    {
+        // Check if answers are uploaded
+        if (!$request->hasFile('answers')) {
+            return response()->json(['message' => 'No answers uploaded'], 400);
+        }
+
+        // Check if there is an incomplete test for the user
+        $test = Test::where('user_id', auth()->id())->where('status', 'incomplete')->first();
+        if (!$test) {
+            // Create a new test record if none exists
+            $test = Test::create([
+                'user_id' => auth()->id(),
+                'status' => 'incomplete',
+            ]);
+        }
+
+        // Ensure test_id is not null
+        if (is_null($test->test_id)) {
+            return response()->json(['message' => 'Test creation failed'], 500);
+        }
+
+        // Loop through each answer file
+        foreach ($request->file('answers') as $question_id => $audio_file) {
+            $question = Question::find($question_id);
+            if (!$question) {
+                return response()->json(['message' => 'Question not found'], 404);
+            }
+
+            // Store the audio file
+            $audio_path = $audio_file->store('audio_answers', 'public');
+
+            // Create an answer record
+            Answer::create([
+                'user_id' => auth()->id(),
+                'test_id' => $test->test_id,
+                'question_id' => $question_id,
+                'audio_path' => $audio_path,
+            ]);
+        }
+
+        // Check if all answers for the test are received (optional logic)
+        // Update test status if needed
+        // $test->update(['status' => 'completed']);
+
+        return response()->json(['message' => 'Answer submitted successfully!', 'test_id' => $test->test_id]);
     }
 
-    public function update(Request $request, $id)
+
+
+
+
+
+    // دالة لتحديث نتيجة الاختبار وتحديث الحالة تلقائيًا
+    public function updateTestResult(Request $request, $user_id)
     {
-        $test = Test::findOrFail($id);
-        $test->update($request->all());
+        // تحقق من وجود الاختبار الخاص بالمستخدم
+        $test = Test::where('user_id', $user_id)->first();
+        if (!$test) {
+            return response()->json(['message' => 'No test found for this user'], 404);
+        }
 
-        return response()->json($test);
-    }
+        // تحديث النتيجة
+        $test->result = $request->input('result');
 
-    public function destroy($id)
-    {
-        $test = Test::findOrFail($id);
-        $test->delete();
+        // تحديث الحالة إلى "completed"
+        $test->status = 'completed';
 
-        return response()->json(['message' => 'Test deleted successfully']);
+        // حفظ التغييرات
+        $test->save();
+
+        return response()->json(['message' => 'Test result updated successfully!', 'test' => $test]);
     }
 }
+
+

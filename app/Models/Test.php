@@ -10,6 +10,8 @@ class Test extends Model
     use HasFactory;
 
     protected $primaryKey = 'test_id';
+    public $incrementing = true;
+    protected $keyType = 'int';
     protected $fillable = [
         'user_id',
         'result',

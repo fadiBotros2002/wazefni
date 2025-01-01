@@ -37,6 +37,13 @@ Route::middleware([StartSession::class])->group(function () {
     Route::post('/reset-password', [PasswordResetController::class, 'reset'])->name('password.reset');
 });
 
+////////testing user for AI///////////
+// fetsh the test answer of user
+Route::get('/user_test_answers/{id}', [AnswerController::class, 'getUserTestAnswers']);
+// update the test result (score) of user
+Route::put('/update_test_result/{id}', [TestController::class, 'updateTestResult']);
+
+
 
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
@@ -114,7 +121,9 @@ Route::middleware(['auth:sanctum', AllAccess::class])->group(function () {
         Route::post('/answers/store', [AnswerController::class, 'store']);
 
         //tests
-
+        Route::get('/questions', [TestController::class, 'getAllQuestions']);
+        Route::get('/questions/{id}', [TestController::class, 'getQuestionsById']);
+        Route::post('/submit_answers', [TestController::class, 'storeAnswers']);
     });
 
 
