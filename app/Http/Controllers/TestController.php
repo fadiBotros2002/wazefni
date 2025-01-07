@@ -45,10 +45,6 @@ class TestController extends Controller
             ]);
         }
 
-        // Ensure test_id is not null
-        if (is_null($test->test_id)) {
-            return response()->json(['message' => 'Test creation failed'], 500);
-        }
 
         // Loop through each answer file
         foreach ($request->file('answers') as $question_id => $audio_file) {
@@ -81,22 +77,21 @@ class TestController extends Controller
 
 
 
-    // دالة لتحديث نتيجة الاختبار وتحديث الحالة تلقائيًا
+    // update results and state of test
     public function updateTestResult(Request $request, $user_id)
     {
-        // تحقق من وجود الاختبار الخاص بالمستخدم
+
         $test = Test::where('user_id', $user_id)->first();
         if (!$test) {
             return response()->json(['message' => 'No test found for this user'], 404);
         }
 
-        // تحديث النتيجة
+        // update result
         $test->result = $request->input('result');
 
-        // تحديث الحالة إلى "completed"
+        // update status
         $test->status = 'completed';
 
-        // حفظ التغييرات
         $test->save();
 
         return response()->json(['message' => 'Test result updated successfully!', 'test' => $test]);

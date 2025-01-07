@@ -21,7 +21,7 @@ class Post extends Model
         'time',
         'salary',
         'experience_year',
-     
+  
         'posted_at',
     ];
 
@@ -42,10 +42,7 @@ class Post extends Model
         return $this->hasMany(Application::class, 'post_id', 'post_id');
     }
 
-    public function notifications()
-    {
-        return $this->hasMany(Notification::class, 'post_id', 'post_id');
-    }
+
 
 
     public function scopeFilter($query, $filters)

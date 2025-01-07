@@ -20,6 +20,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'verification_code',
         'role',
         'phone',
+        'location',
         'userstatus',
         'email_verified_at'
     ];
@@ -52,10 +53,7 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasOne(Employer::class, 'user_id', 'user_id');
     }
 
-    public function notifications()
-    {
-        return $this->hasMany(Notification::class, 'user_id', 'user_id');
-    }
+
 
     public function posts()
     {

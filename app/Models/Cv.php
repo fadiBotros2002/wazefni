@@ -21,6 +21,7 @@ class Cv extends Model
         'city',
         'address',
         'portfolio',
+        'pdf',
     ];
 
     // Define the relationship with User model correctly

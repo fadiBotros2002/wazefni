@@ -17,6 +17,7 @@ return new class extends Migration
             $table->unsignedBigInteger('user_id');
             $table->string('cv');
             $table->string('test_result');
+            $table->string('status')->default('pending');
             $table->timestamp('application_date');
             $table->timestamps();
 

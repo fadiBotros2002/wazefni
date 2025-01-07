@@ -20,20 +20,13 @@ class ApplicationsTableSeeder extends Seeder
                     'post_id' => 1,
                     'user_id' => 3,
                     'cv' => 'cv1.pdf',
-                    'test_result' => 'Passed',
+                    'test_result' => '80',
+                    'status' =>'pending',
                     'application_date' => now(),
                     'created_at' => now(),
                     'updated_at' => now(),
                 ],
-                [
-                    'post_id' => 2,
-                    'user_id' => 4,
-                    'cv' => 'cv2.pdf',
-                    'test_result' => 'Failed',
-                    'application_date' => now(),
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ],
+
 
             ]);
         }

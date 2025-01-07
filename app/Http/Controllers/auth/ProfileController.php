@@ -24,7 +24,7 @@ class ProfileController extends Controller
         if (isset($input['email'])) {
             $request->validate(['email' => 'required|email|unique:users,email']);
             $user->email = $input['email'];
-           /*   //this code if i need to verify  email if i need edit profile email of user//
+            /*   //this code if i need to verify  email if i need edit profile email of user//
             $verificationCode = rand(100000, 999999);
             $user->email_temp = $input['email'];
             $user->verification_code = $verificationCode;
@@ -69,5 +69,16 @@ class ProfileController extends Controller
         }
 
         return response()->json(['message' => 'Invalid verification code'], 400);
+    }
+
+    public function getUserInfo()
+    {
+        $user = Auth::user();
+
+        if (!$user) {
+            return response()->json(['error' => 'User not found'], 404);
+        }
+
+        return response()->json($user, 200);
     }
 }

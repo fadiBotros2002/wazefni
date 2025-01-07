@@ -76,7 +76,7 @@ class AnswerController extends Controller
         // Map through each answer to include question text and encode audio file
         $result = $answers->map(function ($answer) {
             $audio_path = storage_path('app/public/' . $answer->audio_path);  // Get full path to audio file
-            $audio_content = base64_encode(file_get_contents($audio_path));  // Encode audio file to base64
+            $audio_content = base64_encode(file_get_contents($audio_path));  //  audio file
 
             return [
                 'question_id' => $answer->question_id,

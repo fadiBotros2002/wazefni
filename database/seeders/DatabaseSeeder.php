@@ -33,7 +33,6 @@ class DatabaseSeeder extends Seeder
                 PostsTableSeeder::class,
                 ReportsTableSeeder::class,
                 ApplicationsTableSeeder::class,
-                NotificationsTableSeeder::class,
                 CVsTableSeeder::class,
                 LanguagesTableSeeder::class,
                 ExperiencesTableSeeder::class,

@@ -15,6 +15,7 @@ class Application extends Model
         'user_id',
         'cv',
         'test_result',
+        'status',
         'application_date',
     ];
 
@@ -28,8 +29,5 @@ class Application extends Model
         return $this->belongsTo(User::class, 'user_id', 'user_id');
     }
 
-    public function notifications()
-    {
-        return $this->hasOne(Notification::class, 'application_id', 'application_id');
-    }
+
 }

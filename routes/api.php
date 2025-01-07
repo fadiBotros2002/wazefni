@@ -21,7 +21,7 @@ use App\Http\Controllers\ReportController;
 use App\Http\Controllers\AnswerController;
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\QuestionController;
-
+use App\Http\Controllers\ApplicationController;
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////
@@ -54,11 +54,11 @@ Route::middleware(['auth:sanctum', AllAccess::class])->group(function () {
 
     //show all job posts
     Route::get('/posts', [PostController::class, 'index']);
-     //User Profile
+    //User Profile
     Route::post('/update-user-info', [ProfileController::class, 'updateUserInfo']);
+    Route::get('/profile/show', [ProfileController::class, 'getUserInfo']);
     Route::get('/employer/posts/show/{id}', [PostController::class, 'show']);
-
-
+    Route::get('/employer/posts/getEmpPosts', [PostController::class, 'getEmpPosts']);
 
 
 
@@ -99,6 +99,7 @@ Route::middleware(['auth:sanctum', AllAccess::class])->group(function () {
         Route::post('/cvs/store', [CvController::class, 'store']);
         Route::put('/cvs/update/{id?}', [CvController::class, 'update']);
         Route::delete('/cvs/{id}', [CvController::class, 'destroy']);
+        Route::get('/cvs/pdf', [CvController::class, 'getUserPdf']);
         //Languages
         Route::get('/languages/show', [LanguageController::class, 'index']);
         Route::post('/languages/store', [LanguageController::class, 'store']);
@@ -124,6 +125,13 @@ Route::middleware(['auth:sanctum', AllAccess::class])->group(function () {
         Route::get('/questions', [TestController::class, 'getAllQuestions']);
         Route::get('/questions/{id}', [TestController::class, 'getQuestionsById']);
         Route::post('/submit_answers', [TestController::class, 'storeAnswers']);
+
+        //application on post
+        Route::post('/applications/submit/{post_id}', [ApplicationController::class, 'submitApplication']);
+        Route::get('/applications', [ApplicationController::class, 'getAllApplications']);
+        Route::get('/applications/{id}', [ApplicationController::class, 'getApplication']);
+        Route::delete('/applications/{id}', [ApplicationController::class, 'deleteApplication']);
+
     });
 
 
@@ -137,6 +145,8 @@ Route::middleware(['auth:sanctum', AllAccess::class])->group(function () {
         });
         Route::put('/employer/posts/update/{id}', [PostController::class, 'update']);
         Route::delete('/employer/posts/delete/{id}', [PostController::class, 'destroy']);
+        // approve or reject application
+        Route::put('/applications/{id}', [ApplicationController::class, 'updateApplicationStatus']);
     });
 
 

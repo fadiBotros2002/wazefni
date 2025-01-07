@@ -15,16 +15,17 @@ return new class extends Migration
             $table->bigIncrements('cv_id');
             $table->unsignedBigInteger('user_id')->unique();
           //  $table->string('image')->nullable();
-            $table->string('first_name');
-            $table->string('last_name');
-            $table->string('email')->unique();
-            $table->string('phone_number');
-            $table->string('domain');
+            $table->string('first_name')->nullable();
+            $table->string('last_name')->nullable();
+            $table->string('email')->unique()->nullable();
+            $table->string('phone_number')->nullable();
+            $table->string('domain')->nullable();
             $table->text('education')->nullable();
             $table->text('skills')->nullable();
-            $table->string('city');
-            $table->text('address');
+            $table->string('city')->nullable();
+            $table->text('address')->nullable();
             $table->text('portfolio')->nullable();
+            $table->string('pdf')->nullable();
             $table->timestamps();
 
             $table->foreign('user_id')->references('user_id')->on('users')->onDelete('cascade');
