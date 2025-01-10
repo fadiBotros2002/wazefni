@@ -44,6 +44,8 @@ Route::get('/user_test_answers/{id}', [AnswerController::class, 'getUserTestAnsw
 Route::put('/update_test_result/{id}', [TestController::class, 'updateTestResult']);
 
 
+
+
     //show all job posts
     Route::get('/posts', [PostController::class, 'index']);
 ///////////////////////////////////////////////////////////
