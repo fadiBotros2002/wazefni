@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Notification;
 class ApplicationController extends Controller
 {
 
-
+    //application for the job
     public function submitApplication(Request $request, $post_id)
     {
         $request->validate([
@@ -24,23 +24,20 @@ class ApplicationController extends Controller
         ]);
 
         $user = Auth::user();
-
-        // تحقق مما إذا كان المستخدم قد قدم طلبًا لنفس الوظيفة من قبل
+        // validate user if apply to the same job for the job previous
         $existingApplication = Application::where('post_id', $post_id)
-                                ->where('user_id', $user->user_id)
-                                ->first();
+            ->where('user_id', $user->user_id)
+            ->first();
 
         if ($existingApplication) {
             return response()->json(['message' => 'You have already applied for this job'], 400);
         }
-
-        // حاول الحصول على نتيجة الاختبار المكتملة
+        //to get the latest test result
         $test = Test::where('user_id', $user->user_id)
-                    ->where('status', 'completed')
-                    ->orderBy('created_at', 'desc')
-                    ->first();
-
-        // إذا لم يكن هناك اختبار مكتمل، اجعل نتيجة الاختبار صفر
+            ->where('status', 'completed')
+            ->orderBy('created_at', 'desc')
+            ->first();
+        //if there are no test put the res ==0
         $testResult = $test ? $test->result : 0;
 
         $application = new Application();
@@ -97,7 +94,7 @@ class ApplicationController extends Controller
             $application->status = $request->status;
             $application->save();
 
-            // إرسال إشعار بريد إلكتروني عند قبول الطلب
+            //send the notification by email if accepted the app
             if ($request->status == 'accepted') {
                 $user = User::find($application->user_id);
                 Notification::send($user, new ApplicationAccepted($application));
@@ -108,5 +105,4 @@ class ApplicationController extends Controller
             return response()->json(['message' => 'Application not found!'], 404);
         }
     }
-
 }

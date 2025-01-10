@@ -44,7 +44,8 @@ Route::get('/user_test_answers/{id}', [AnswerController::class, 'getUserTestAnsw
 Route::put('/update_test_result/{id}', [TestController::class, 'updateTestResult']);
 
 
-
+    //show all job posts
+    Route::get('/posts', [PostController::class, 'index']);
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////
@@ -52,8 +53,7 @@ Route::put('/update_test_result/{id}', [TestController::class, 'updateTestResult
 
 Route::middleware(['auth:sanctum', AllAccess::class])->group(function () {
 
-    //show all job posts
-    Route::get('/posts', [PostController::class, 'index']);
+
     //User Profile
     Route::post('/update-user-info', [ProfileController::class, 'updateUserInfo']);
     Route::get('/profile/show', [ProfileController::class, 'getUserInfo']);

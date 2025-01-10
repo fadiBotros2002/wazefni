@@ -57,15 +57,12 @@ class CvController extends Controller
             $validatedData['pdf'] = $filePath;
         }
 
-        // تحقق من وجود CV للمستخدم
-        $cv = Cv::where('user_id', $user_id)->first();
+            $cv = Cv::where('user_id', $user_id)->first();
 
-        if ($cv) {
-            // تحديث CV الحالي
+        if ($cv) { //there are cv just update
             $cv->update($validatedData);
             return response()->json($cv, 200);
-        } else {
-            // إنشاء CV جديد
+        } else {//else create
             $validatedData['user_id'] = $user_id;
             $cv = Cv::create($validatedData);
             return response()->json($cv, 201);

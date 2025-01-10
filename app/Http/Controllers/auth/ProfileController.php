@@ -70,7 +70,7 @@ class ProfileController extends Controller
 
         return response()->json(['message' => 'Invalid verification code'], 400);
     }
-
+// get user information profile
     public function getUserInfo()
     {
         $user = Auth::user();
