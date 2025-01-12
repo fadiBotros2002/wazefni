@@ -14,7 +14,6 @@ use Filament\Tables\Table;
 use Filament\Tables\Actions\Action;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Mail;
@@ -32,7 +31,12 @@ class EmployerResource extends Resource
                 Forms\Components\TextInput::make('user_id')->label('User ID')->required(),
                 Forms\Components\TextInput::make('company_name')->label('Company Name')->required(),
                 Forms\Components\Textarea::make('company_description')->label('Company Description')->required(),
-                Forms\Components\FileUpload::make('verification_documents')->label('Verification Documents')->required(),
+                Forms\Components\FileUpload::make('verification_documents')
+                    ->label('Verification Documents')
+                    ->required()
+                    ->disk('local') // نستخدم disk المحلي هنا
+                    ->directory('verification_documents') // تحديد المجلد الذي سيتم تخزين الملفات فيه
+                    ->preserveFilenames() // الحفاظ على أسماء الملفات الأصلية
             ]);
     }
 
@@ -44,7 +48,15 @@ class EmployerResource extends Resource
                 Tables\Columns\TextColumn::make('user_id')->label('User ID'),
                 Tables\Columns\TextColumn::make('company_name')->label('Company Name'),
                 Tables\Columns\TextColumn::make('company_description')->label('Company Description'),
-                Tables\Columns\TextColumn::make('verification_documents')->label('Verification Documents'),
+                Tables\Columns\TextColumn::make('verification_documents')
+                    ->label('Verification Documents')
+                    ->formatStateUsing(function ($state) {
+                        if ($state) {
+                            return '<a href="' . url('storage/verification_documents/' . basename($state)) . '" target="_blank">Open</a>';
+                        }
+                        return 'No Document';
+                    })
+                    ->html(),
             ])
             ->filters([
                 Tables\Filters\Filter::make('pending')
@@ -87,30 +99,29 @@ class EmployerResource extends Resource
 
     // الدالة المخصصة لإدارة الطلبات
 
-public static function handleRequest($action, $user_id)
-{
-    $user = User::findOrFail($user_id);
-    $employer = Employer::where('user_id', $user_id)->first();
+    public static function handleRequest($action, $user_id)
+    {
+        $user = User::findOrFail($user_id);
+        $employer = Employer::where('user_id', $user_id)->first();
 
-    if ($action === 'approve') {
-        $user->update(['role' => 'employer']);
-        $user->update(['userstatus' => 'active']);
-        Mail::to($user->email)->send(new EmployerStatusMail($user, 'approved'));
-        Log::info('User approved as an employer.', ['user_id' => $user_id]);
-    } elseif ($action === 'reject') {
-        if ($employer && $employer->verification_documents) {
-            Storage::delete($employer->verification_documents);
+        if ($action === 'approve') {
+            $user->update(['role' => 'employer']);
+            $user->update(['userstatus' => 'active']);
+            Mail::to($user->email)->send(new EmployerStatusMail($user, 'approved'));
+            Log::info('User approved as an employer.', ['user_id' => $user_id]);
+        } elseif ($action === 'reject') {
+            if ($employer && $employer->verification_documents) {
+                Storage::delete('verification_documents/' . basename($employer->verification_documents)); // حذف الملف باستخدام المسار المحلي
+            }
+            if ($employer) {
+                $employer->delete();
+            }
+            $user->update(['role' => 'user']);
+            $user->update(['userstatus' => 'active']);
+            Mail::to($user->email)->send(new EmployerStatusMail($user, 'rejected'));
+            Log::info('User rejected as an employer and record deleted.', ['user_id' => $user_id]);
+        } else {
+            Log::warning('Invalid action provided.', ['action' => $action, 'user_id' => $user_id]);
         }
-        if ($employer) {
-            $employer->delete();
-        }
-        $user->update(['role' => 'user']);
-        $user->update(['userstatus' => 'active']);
-        Mail::to($user->email)->send(new EmployerStatusMail($user, 'rejected'));
-        Log::info('User rejected as an employer and record deleted.', ['user_id' => $user_id]);
-    } else {
-        Log::warning('Invalid action provided.', ['action' => $action, 'user_id' => $user_id]);
     }
-}
-
 }
