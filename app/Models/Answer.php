@@ -11,7 +11,13 @@ class Answer extends Model
 
     protected $primaryKey = 'answer_id';
 
-    protected $fillable = [ 'user_id','test_id', 'question_id', 'audio_path', 'ai_response'];
+    protected $fillable = [
+        'user_id',
+        'test_id',
+        'question_id',
+        'audio_path',
+        'ai_response'
+    ];
 
     public function tests()
     {

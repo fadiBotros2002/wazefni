@@ -21,7 +21,6 @@ class Post extends Model
         'time',
         'salary',
         'experience_year',
-  
         'posted_at',
     ];
 

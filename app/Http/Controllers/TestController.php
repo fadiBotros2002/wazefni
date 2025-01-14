@@ -26,13 +26,17 @@ class TestController extends Controller
 
 
 
-
-
     public function storeAnswers(Request $request)
     {
         // Check if answers are uploaded
         if (!$request->hasFile('answers')) {
             return response()->json(['message' => 'No answers uploaded'], 400);
+        }
+
+        // Check if the user has already completed a test
+        $completedTest = Test::where('user_id', auth()->id())->where('status', 'completed')->first();
+        if ($completedTest) {
+            return response()->json(['message' => 'Test already completed'], 400);
         }
 
         // Check if there is an incomplete test for the user
@@ -44,7 +48,6 @@ class TestController extends Controller
                 'status' => 'incomplete',
             ]);
         }
-
 
         // Loop through each answer file
         foreach ($request->file('answers') as $question_id => $audio_file) {
