@@ -147,8 +147,11 @@ Route::middleware(['auth:sanctum', AllAccess::class])->group(function () {
         });
         Route::put('/employer/posts/update/{id}', [PostController::class, 'update']);
         Route::delete('/employer/posts/delete/{id}', [PostController::class, 'destroy']);
+        //get all application of the employer
+        Route::get('/employer/applications', [ApplicationController::class, 'getAllApplicationsByEmployer'])->middleware('auth:api');
         // approve or reject application
         Route::put('/applications/{id}', [ApplicationController::class, 'updateApplicationStatus']);
+
     });
 
 

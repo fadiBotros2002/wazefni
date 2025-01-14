@@ -11,20 +11,17 @@ use App\Mail\ApplicationAcceptedMail;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Auth;
 use App\Notifications\ApplicationAccepted;
+use App\Notifications\ApplicationRejected;
 use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Facades\DB;
 
 class ApplicationController extends Controller
 {
 
-    //application for the job
     public function submitApplication(Request $request, $post_id)
     {
-        $request->validate([
-            'cv' => 'nullable|file|mimes:pdf,doc,docx,jpg,png',
-        ]);
-
         $user = Auth::user();
-        // validate user if apply to the same job for the job previous
+        // Check if the user has already applied for the same job
         $existingApplication = Application::where('post_id', $post_id)
             ->where('user_id', $user->user_id)
             ->first();
@@ -32,26 +29,29 @@ class ApplicationController extends Controller
         if ($existingApplication) {
             return response()->json(['message' => 'You have already applied for this job'], 400);
         }
-        //to get the latest test result
+        // Get the latest test result for the user
         $test = Test::where('user_id', $user->user_id)
             ->where('status', 'completed')
             ->orderBy('created_at', 'desc')
             ->first();
-        //if there are no test put the res ==0
+
         $testResult = $test ? $test->result : 0;
+
+        // Retrieve the user's CV from the database
+        $cv = DB::table('cvs')
+            ->where('user_id', $user->user_id)
+            ->value('pdf');
 
         $application = new Application();
         $application->post_id = $post_id;
         $application->user_id = $user->user_id;
-        $application->cv = $request->file('cv') ? $request->file('cv')->store('cvs') : null;
+        $application->cv = $cv; // Even if this is null, the application will still be submitted
         $application->test_result = $testResult;
         $application->application_date = now();
         $application->save();
 
         return response()->json(['message' => 'Application submitted successfully!'], 200);
     }
-
-
 
 
     public function getAllApplications()
@@ -82,7 +82,6 @@ class ApplicationController extends Controller
     }
 
 
-
     public function updateApplicationStatus(Request $request, $id)
     {
         $request->validate([
@@ -94,10 +93,16 @@ class ApplicationController extends Controller
             $application->status = $request->status;
             $application->save();
 
-            //send the notification by email if accepted the app
+            // send the notification by email if the application is accepted
             if ($request->status == 'accepted') {
                 $user = User::find($application->user_id);
                 Notification::send($user, new ApplicationAccepted($application));
+            }
+
+            // send the notification by email if the application is rejected
+            if ($request->status == 'rejected') {
+                $user = User::find($application->user_id);
+                Notification::send($user, new ApplicationRejected($application));
             }
 
             return response()->json(['message' => 'Application status updated successfully!'], 200);
@@ -105,4 +110,24 @@ class ApplicationController extends Controller
             return response()->json(['message' => 'Application not found!'], 404);
         }
     }
+
+
+    public function getAllApplicationsByEmployer()
+    {
+        // Get the currently authenticated user
+        $employer = Auth::user();
+
+        // Retrieve all applications for all posts by the authenticated employer
+        $applications = [];
+        foreach ($employer->posts as $post) {
+            $postApplications = $post->applications;
+            $applications = array_merge($applications, $postApplications->toArray());
+        }
+
+        return response()->json(['applications' => $applications], 200);
+    }
+
+
+
+
 }
