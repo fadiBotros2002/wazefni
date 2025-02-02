@@ -59,9 +59,7 @@ class AnswerController extends Controller
 
         return response()->json(['message' => 'Answer deleted successfully']);
     }
-
-    public function getUserTestAnswers($userId)
-    {
+    public function getUserTestAnswers($userId) {
         // Fetch the test for the given user
         $test = Test::where('user_id', $userId)->first();
 
@@ -75,20 +73,26 @@ class AnswerController extends Controller
 
         // Map through each answer to include question text and encode audio file
         $result = $answers->map(function ($answer) {
-            $audio_path = storage_path('app/public/' . $answer->audio_path);  // Get full path to audio file
-            $audio_content = base64_encode(file_get_contents($audio_path));  //  audio file
+            $audio_path = storage_path('app/public/' . $answer->audio_path); // Get full path to audio file
+            $audio_content = base64_encode(file_get_contents($audio_path)); // Encode audio file
+
+            // Fetch the question text based on question_id
+            $question = Question::find($answer->question_id);
 
             return [
                 'question_id' => $answer->question_id,
                 'audio_path' => $answer->audio_path,
-                'question' => Question::find($answer->question_id)->question_text,  // Get question text
-                'audio_content' => $audio_content,  // Include base64 encoded audio content
+                'question' => $question ? $question->question_text : null, // Include question text
+                'audio_content' => $audio_content, // Include base64 encoded audio content
             ];
         });
 
-        return response()->json(['test_id' => $test->test_id, 'answers' => $result]);
+        // Return results in JSON format
+        return response()->json([
+            'test_id' => $test->test_id,
+            'answers' => $result
+        ]);
     }
-
 
 }
 
