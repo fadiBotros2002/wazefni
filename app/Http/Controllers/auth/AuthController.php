@@ -105,10 +105,10 @@ class AuthController extends Controller
                 'role' => $request->role ?? 'user',
                 'phone' => $request->phone,
                 'userstatus' => $request->userstatus ?? 'active',
-                'location' => $request->location, // إضافة الحقل location إلى الإدخال
+                'location' => $request->location,
                 'email_verified_at' => now(),
             ]);
-
+                    ///listener if the user created in db successfully
             event(new Registered($user));
 
             Log::info('User registered successfully.', ['user' => $user]);

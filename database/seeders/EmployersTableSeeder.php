@@ -26,6 +26,16 @@ class EmployersTableSeeder extends Seeder
                     'updated_at' => now(),
 
                 ],
+                [
+                    'user_id' => 3,
+
+                    'company_name' => 'Buisness company',
+                    'company_description' => 'buisness company for accounting and hr',
+                    'verification_documents' =>null,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+
+                ],
 
             ]
         );

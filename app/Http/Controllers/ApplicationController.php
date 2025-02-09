@@ -128,6 +128,14 @@ class ApplicationController extends Controller
     }
 
 
+//to get all applications of post
+    public function getApplicationsByPostId($post_id)
+    {
+        $applications = Application::where('post_id', $post_id)->get();
+        $jobDescription = Post::where('post_id', $post_id)->value('description');
+
+        return response()->json(['applications' => $applications, 'job_description' => $jobDescription]);
+    }
 
 
 }

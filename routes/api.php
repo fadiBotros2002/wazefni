@@ -45,9 +45,11 @@ Route::put('/update_test_result/{id}', [TestController::class, 'updateTestResult
 
 
 
-
+//without access token
     //show all job posts
     Route::get('/posts', [PostController::class, 'index']);
+    //get all applications of post
+    Route::get('/applications/post/{post_id}', [ApplicationController::class, 'getApplicationsByPostId']);
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////

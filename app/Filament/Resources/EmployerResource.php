@@ -34,9 +34,9 @@ class EmployerResource extends Resource
                 Forms\Components\FileUpload::make('verification_documents')
                     ->label('Verification Documents')
                     ->required()
-                    ->disk('local') // نستخدم disk المحلي هنا
-                    ->directory('verification_documents') // تحديد المجلد الذي سيتم تخزين الملفات فيه
-                    ->preserveFilenames() // الحفاظ على أسماء الملفات الأصلية
+                    ->disk('local')
+                    ->directory('verification_documents')
+                    ->preserveFilenames()
             ]);
     }
 
@@ -97,7 +97,7 @@ class EmployerResource extends Resource
         ];
     }
 
-    // الدالة المخصصة لإدارة الطلبات
+
 
     public static function handleRequest($action, $user_id)
     {
@@ -111,7 +111,7 @@ class EmployerResource extends Resource
             Log::info('User approved as an employer.', ['user_id' => $user_id]);
         } elseif ($action === 'reject') {
             if ($employer && $employer->verification_documents) {
-                Storage::delete('verification_documents/' . basename($employer->verification_documents)); // حذف الملف باستخدام المسار المحلي
+                Storage::delete('verification_documents/' . basename($employer->verification_documents));
             }
             if ($employer) {
                 $employer->delete();

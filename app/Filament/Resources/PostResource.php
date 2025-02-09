@@ -22,50 +22,50 @@ class PostResource extends Resource
     {
         return $form
             ->schema([
-                // حقل المستخدم (محدد بالعلاقة مع جدول المستخدمين)
+
                 Forms\Components\Select::make('user_id')
                     ->label('User')
                     ->options(function () {
-                        return DB::table('users')->pluck('name', 'user_id');  // سحب الأسماء من جدول المستخدمين
+                        return DB::table('users')->pluck('name', 'user_id');
                     })
                     ->searchable()
                     ->required(),
 
-                // حقل العنوان
+
                 Forms\Components\TextInput::make('title')
                     ->required()
                     ->maxLength(255),
 
-                // حقل النوع
+
                 Forms\Components\TextInput::make('type')
                     ->required(),
 
-                // حقل الوصف
+
                 Forms\Components\Textarea::make('description')
                     ->required(),
 
-                // حقل المتطلبات
+
                 Forms\Components\Textarea::make('requirement')
                     ->required(),
 
-                // حقل الموقع
+
                 Forms\Components\TextInput::make('location')
                     ->required(),
 
-                // حقل الوقت
+
                 Forms\Components\TextInput::make('time')
                     ->required(),
 
-                // حقل الراتب
+
                 Forms\Components\TextInput::make('salary')
                     ->required(),
 
-                // حقل سنوات الخبرة
+
                 Forms\Components\TextInput::make('experience_year')
                     ->numeric()
                     ->required(),
 
-                // حقل تاريخ النشر
+
                 Forms\Components\DateTimePicker::make('posted_at')
                     ->required(),
             ]);
@@ -74,8 +74,8 @@ class PostResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-            ->columns([  // تحديد الأعمدة التي ستظهر في الجدول
-                Tables\Columns\TextColumn::make('user.name')  // عرض اسم المستخدم بدلاً من ID
+            ->columns([
+                Tables\Columns\TextColumn::make('user.name')
                     ->label('User')
                     ->sortable()
                     ->searchable(),
@@ -89,14 +89,14 @@ class PostResource extends Resource
                     ->sortable()
                     ->dateTime(),
             ])
-            ->filters([  // إضافة فلاتر للبحث
+            ->filters([
                 //
             ])
-            ->actions([  // إضافة الإجراءات المتاحة على السجلات
+            ->actions([
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
             ])
-            ->bulkActions([  // إضافة الإجراءات المجمعة
+            ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),
             ]);
     }
@@ -111,9 +111,9 @@ class PostResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListPosts::route('/'),  // صفحة العرض
-            'create' => Pages\CreatePost::route('/create'),  // صفحة الإضافة
-            'edit' => Pages\EditPost::route('/{record}/edit'),  // صفحة التعديل
+            'index' => Pages\ListPosts::route('/'),
+            'create' => Pages\CreatePost::route('/create'),
+            'edit' => Pages\EditPost::route('/{record}/edit'),  
         ];
     }
 }
